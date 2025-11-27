@@ -136,6 +136,8 @@ onMounted(() => {
     } else {
       window.scrollTo({ top: 0, behavior: 'auto' })
     }
+    // Clear cache so new page elements are queried
+    cachedAnimatedBlocks = null
     // Use requestIdleCallback for non-critical work to avoid blocking main thread
     // Falls back to requestAnimationFrame if not supported
     if (typeof requestIdleCallback === 'function') {
