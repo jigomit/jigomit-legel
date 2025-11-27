@@ -28,16 +28,23 @@ useHead(
   )
 )
 
-// Practice area images - professional legal photography
+// Practice area images - professional legal photography (JPG and WebP)
 import corporateLawImg from '../assets/images/practice-areas/corporate-law.jpg'
+import corporateLawImgWebP from '../assets/images/practice-areas/corporate-law.webp'
 import litigationImg from '../assets/images/practice-areas/litigation.jpg'
+import litigationImgWebP from '../assets/images/practice-areas/litigation.webp'
 import realEstateImg from '../assets/images/practice-areas/real-estate.jpg'
+import realEstateImgWebP from '../assets/images/practice-areas/real-estate.webp'
 import crisisImg from '../assets/images/practice-areas/crisis-management.jpg'
+import crisisImgWebP from '../assets/images/practice-areas/crisis-management.webp'
 
-// Attorney headshots - professional team
+// Attorney headshots - professional team (JPG and WebP)
 import attorney1 from '../assets/images/attorneys/attorney-1.jpg'
+import attorney1WebP from '../assets/images/attorneys/attorney-1.webp'
 import attorney2 from '../assets/images/attorneys/attorney-2.jpg'
+import attorney2WebP from '../assets/images/attorneys/attorney-2.webp'
 import attorney3 from '../assets/images/attorneys/attorney-3.jpg'
+import attorney3WebP from '../assets/images/attorneys/attorney-3.webp'
 
 // Hero statistics - client-friendly metrics
 const heroStats = [
@@ -63,6 +70,7 @@ const practiceAreas = [
     description: 'Business formation, contracts, mergers & acquisitions, and corporate governance.',
     focus: 'Regulatory Strategy & Board Advisory',
     image: corporateLawImg,
+    imageWebP: corporateLawImgWebP,
   },
   {
     icon: '🏛️',
@@ -70,6 +78,7 @@ const practiceAreas = [
     description: 'Civil litigation, arbitration, dispute resolution, and courtroom representation.',
     focus: 'Market-Making Litigation Campaigns',
     image: litigationImg,
+    imageWebP: litigationImgWebP,
   },
   {
     icon: '📈',
@@ -77,6 +86,7 @@ const practiceAreas = [
     description: 'Property transactions, leasing, title disputes, and real estate development.',
     focus: 'Deal Velocity & Transaction Enablement',
     image: realEstateImg,
+    imageWebP: realEstateImgWebP,
   },
   {
     icon: '🛡️',
@@ -84,6 +94,7 @@ const practiceAreas = [
     description: 'Legal crisis response, reputation protection, and strategic risk management.',
     focus: 'Reputation, Crisis, & Issues Management',
     image: crisisImg,
+    imageWebP: crisisImgWebP,
   },
 ]
 
@@ -95,6 +106,7 @@ const attorneys = [
     specialization: 'Corporate Law & M&A',
     experience: '20+ Years',
     image: attorney1,
+    imageWebP: attorney1WebP,
     credentials: 'Harvard Law School, Bar Council Certified',
   },
   {
@@ -103,6 +115,7 @@ const attorneys = [
     specialization: 'Litigation & Dispute Resolution',
     experience: '18+ Years',
     image: attorney2,
+    imageWebP: attorney2WebP,
     credentials: 'Yale Law School, Supreme Court Attorney',
   },
   {
@@ -111,6 +124,7 @@ const attorneys = [
     specialization: 'Real Estate & Property Law',
     experience: '15+ Years',
     image: attorney3,
+    imageWebP: attorney3WebP,
     credentials: 'Stanford Law School, Licensed in 5 States',
   },
 ]
@@ -241,14 +255,17 @@ const figureBadges = [
       <div class="practice-grid">
         <article v-for="area in practiceAreas" :key="area.title" class="practice-card">
           <div class="practice-image-wrapper">
-            <img
-              :src="area.image"
-              :alt="`${area.title} - ${area.description.substring(0, 60)}...`"
-              width="800"
-              height="600"
-              loading="lazy"
-              class="practice-image"
-            />
+            <picture>
+              <source :srcset="area.imageWebP" type="image/webp" />
+              <img
+                :src="area.image"
+                :alt="`${area.title} - ${area.description.substring(0, 60)}...`"
+                width="800"
+                height="600"
+                loading="lazy"
+                class="practice-image"
+              />
+            </picture>
           </div>
           <div class="practice-content">
             <span class="practice-icon">{{ area.icon }}</span>
@@ -275,14 +292,17 @@ const figureBadges = [
       <div class="attorneys-grid">
         <article v-for="attorney in attorneys" :key="attorney.name" class="attorney-card">
           <div class="attorney-image-wrapper">
-            <img
-              :src="attorney.image"
-              :alt="`${attorney.name}, ${attorney.title} specializing in ${attorney.specialization}`"
-              width="400"
-              height="500"
-              loading="lazy"
-              class="attorney-photo"
-            />
+            <picture>
+              <source :srcset="attorney.imageWebP" type="image/webp" />
+              <img
+                :src="attorney.image"
+                :alt="`${attorney.name}, ${attorney.title} specializing in ${attorney.specialization}`"
+                width="400"
+                height="500"
+                loading="lazy"
+                class="attorney-photo"
+              />
+            </picture>
           </div>
           <div class="attorney-info">
             <h3>{{ attorney.name }}</h3>

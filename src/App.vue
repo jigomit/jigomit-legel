@@ -29,6 +29,7 @@ const showBackToTop = ref(false)
 let observer
 let ticking = false // Throttle flag for scroll handler
 let prefersInstantReveal = false // Cached matchMedia result to avoid forced reflows
+let cachedAnimatedBlocks = null // Cache DOM query results to avoid forced reflows
 
 const applyTheme = (value) => {
   if (typeof document !== 'undefined') {
@@ -105,9 +106,13 @@ onMounted(() => {
 
   // Re-observe elements whenever the route changes
   const observeElements = () => {
-    const animatedBlocks = document.querySelectorAll('[data-animate]')
+    // Cache DOM query to avoid repeated querySelectorAll causing forced reflows
+    if (!cachedAnimatedBlocks) {
+      cachedAnimatedBlocks = document.querySelectorAll('[data-animate]')
+    }
+
     // Use cached matchMedia result to avoid forced reflows
-    animatedBlocks.forEach((block) => {
+    cachedAnimatedBlocks.forEach((block) => {
       // Note: Animation delays now handled by CSS nth-child to avoid forced reflows
       if (prefersInstantReveal) {
         block.classList.add('is-visible')
@@ -131,10 +136,17 @@ onMounted(() => {
     } else {
       window.scrollTo({ top: 0, behavior: 'auto' })
     }
-    // Use requestAnimationFrame to batch DOM operations and avoid forced reflows
-    requestAnimationFrame(() => {
-      observeElements()
-    })
+    // Use requestIdleCallback for non-critical work to avoid blocking main thread
+    // Falls back to requestAnimationFrame if not supported
+    if (typeof requestIdleCallback === 'function') {
+      requestIdleCallback(() => {
+        observeElements()
+      })
+    } else {
+      requestAnimationFrame(() => {
+        observeElements()
+      })
+    }
   })
 })
 

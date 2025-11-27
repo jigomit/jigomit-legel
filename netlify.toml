@@ -19,11 +19,13 @@
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    # Critical resource hints for font domains (reduces critical path by ~300ms)
+    # Critical resource hints for font domains + app bundles (reduces critical path)
     Link = '''<https://fonts.googleapis.com>; rel=preconnect; crossorigin, \
               <https://fonts.gstatic.com>; rel=preconnect; crossorigin, \
               <https://fonts.googleapis.com>; rel=dns-prefetch, \
-              <https://fonts.gstatic.com>; rel=dns-prefetch'''
+              <https://fonts.gstatic.com>; rel=dns-prefetch, \
+              </assets/app-*.css>; rel=preload; as=style, \
+              </assets/app-*.js>; rel=modulepreload'''
 
 # Cache static assets
 [[headers]]
