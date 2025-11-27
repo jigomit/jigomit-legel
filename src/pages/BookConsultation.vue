@@ -25,8 +25,9 @@ useHead(
   )
 )
 
-// Team images for consultation booking
+// Team images for consultation booking (JPG and WebP)
 import teamPhoto from '../assets/images/hero/team-photo.jpg'
+import teamPhotoWebP from '../assets/images/hero/team-photo.webp'
 
 const bookingStatus = ref('idle')
 const selectedFocus = ref('')
@@ -166,7 +167,10 @@ watch(
         <div class="booking-sidebar">
           <div class="booking-card team-visual">
             <div class="team-image-wrapper">
-              <img :src="teamPhoto" alt="Legal Crest Professional Team" loading="lazy" class="team-photo" />
+              <picture>
+                <source :srcset="teamPhotoWebP" type="image/webp" />
+                <img :src="teamPhoto" alt="Legal Crest Professional Team" loading="lazy" class="team-photo" />
+              </picture>
             </div>
             <p class="team-caption">
               Meet your dedicated strategy pod — senior litigators and marketing architects ready to mobilize.

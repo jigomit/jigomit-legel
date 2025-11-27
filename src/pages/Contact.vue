@@ -16,8 +16,9 @@ useSEO({
   ogType: 'website',
 })
 
-// Contact support image - Professional support representative from Unsplash
+// Contact support image - Professional support representative from Unsplash (JPG and WebP)
 import supportImage from '../assets/images/contact/support-professional.jpg'
+import supportImageWebP from '../assets/images/contact/support-professional.webp'
 
 const contactHighlights = [
   { label: 'Response Time', value: '< 60 minutes' },
@@ -218,7 +219,10 @@ const handleInput = (fieldName) => {
         </form>
         <div class="contact-details">
           <div class="contact-visual">
-            <img :src="supportImage" alt="Professional Legal Support" loading="lazy" class="support-image" />
+            <picture>
+              <source :srcset="supportImageWebP" type="image/webp" />
+              <img :src="supportImage" alt="Professional Legal Support" loading="lazy" class="support-image" />
+            </picture>
           </div>
           <div class="detail-card">
             <p>Executive concierge</p>

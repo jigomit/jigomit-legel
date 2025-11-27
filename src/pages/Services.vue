@@ -45,7 +45,10 @@ services.forEach((service) => {
         class="service-card"
       >
         <div class="service-photo">
-          <img :src="service.image" :alt="`${service.title} preview`" loading="lazy" />
+          <picture>
+            <source :srcset="service.imageWebP" type="image/webp" />
+            <img :src="service.image" :alt="`${service.title} preview`" loading="lazy" />
+          </picture>
           <span class="service-icon">{{ service.icon }}</span>
         </div>
         <h3>{{ service.title }}</h3>

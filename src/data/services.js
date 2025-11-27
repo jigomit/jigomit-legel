@@ -1,10 +1,16 @@
-// Service images
+// Service images (JPG and WebP for optimal performance)
 import regulatoryImage from '../assets/images/services/regulatory-strategy.jpg'
+import regulatoryImageWebP from '../assets/images/services/regulatory-strategy.webp'
 import litigationImage from '../assets/images/services/litigation-campaigns.jpg'
+import litigationImageWebP from '../assets/images/services/litigation-campaigns.webp'
 import dealImage from '../assets/images/services/deal-velocity.jpg'
+import dealImageWebP from '../assets/images/services/deal-velocity.webp'
 import crisisImage from '../assets/images/services/crisis-management.jpg'
+import crisisImageWebP from '../assets/images/services/crisis-management.webp'
 import clientImage from '../assets/images/services/client-experience.jpg'
+import clientImageWebP from '../assets/images/services/client-experience.webp'
 import leadershipImage from '../assets/images/services/thought-leadership.jpg'
+import leadershipImageWebP from '../assets/images/services/thought-leadership.webp'
 
 export const services = [
   {
@@ -44,6 +50,7 @@ export const services = [
     timeline: 'Ongoing retainer with quarterly deliverables',
     icon: '⚖️',
     image: regulatoryImage,
+    imageWebP: regulatoryImageWebP,
     focus: 'Regulatory Strategy & Board Advisory',
     relatedServices: ['crisis-management', 'thought-leadership'],
   },
@@ -80,6 +87,7 @@ export const services = [
     timeline: 'Case-specific engagements, typically 6-18 months',
     icon: '🧠',
     image: litigationImage,
+    imageWebP: litigationImageWebP,
     focus: 'Market-Making Litigation Campaigns',
     relatedServices: ['crisis-management', 'thought-leadership'],
   },
@@ -116,6 +124,7 @@ export const services = [
     timeline: 'Transaction-specific, typically 3-12 months per deal',
     icon: '📈',
     image: dealImage,
+    imageWebP: dealImageWebP,
     focus: 'Deal Velocity & Transaction Enablement',
     relatedServices: ['regulatory-strategy', 'client-experience'],
   },
@@ -152,6 +161,7 @@ export const services = [
     timeline: 'Retainer-based with immediate activation capability',
     icon: '🛡️',
     image: crisisImage,
+    imageWebP: crisisImageWebP,
     focus: 'Reputation, Crisis, & Issues Management',
     relatedServices: ['regulatory-strategy', 'litigation-campaigns'],
   },
@@ -188,6 +198,7 @@ export const services = [
     timeline: 'Implementation: 2-4 months, then ongoing optimization',
     icon: '🤝',
     image: clientImage,
+    imageWebP: clientImageWebP,
     focus: 'Client Experience & Intake Automation',
     relatedServices: ['deal-velocity', 'thought-leadership'],
   },
@@ -224,6 +235,7 @@ export const services = [
     timeline: 'Ongoing retainer with quarterly content campaigns',
     icon: '📰',
     image: leadershipImage,
+    imageWebP: leadershipImageWebP,
     focus: 'Thought Leadership & Media Authority',
     relatedServices: ['regulatory-strategy', 'litigation-campaigns'],
   },

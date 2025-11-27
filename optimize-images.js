@@ -44,16 +44,34 @@ async function generateWebP(inputPath, outputPath) {
 async function main() {
   console.log('Optimizing images...\n');
 
-  // Critical images that need WebP versions
+  // Critical images that need WebP versions (prioritized by size)
   const criticalImages = [
-    'src/assets/high-court.jpg',
-    'src/assets/images/hero/lawyer-professional-new.jpg',
-    'src/assets/images/practice-areas/corporate-law.jpg',
-    'src/assets/images/practice-areas/litigation.jpg',
-    'src/assets/images/practice-areas/real-estate.jpg',
-    'src/assets/images/practice-areas/crisis-management.jpg',
-    'src/assets/images/attorneys/attorney-1.jpg',
-    'src/assets/images/attorneys/attorney-2.jpg',
+    // Services images (highest priority - audit identified these)
+    'src/assets/images/services/crisis-management.jpg',        // ~157K
+    'src/assets/images/services/litigation-campaigns.jpg',     // ~116K
+    'src/assets/images/services/regulatory-strategy.jpg',
+    'src/assets/images/services/deal-velocity.jpg',
+    'src/assets/images/services/client-experience.jpg',
+    'src/assets/images/services/thought-leadership.jpg',
+
+    // Insights images (high priority - visible on insights page)
+    'src/assets/images/insights/insight-1.jpg',
+    'src/assets/images/insights/insight-2.jpg',
+    'src/assets/images/insights/insight-3.jpg',
+    'src/assets/images/insights/insight-4.jpg',                // ~142K
+    'src/assets/images/insights/insight-5.jpg',
+
+    // Hero images
+    'src/assets/images/hero/team-photo.jpg',                   // ~129K
+    'src/assets/images/hero/consultation-hero.jpg',
+    'src/assets/images/hero/hero-main.jpg',
+    'src/assets/images/hero/lady-justice.jpg',
+    'src/assets/images/hero/lady-justice-full.jpg',
+    'src/assets/images/hero/lawyer-professional.jpg',
+
+    // Contact and attorneys
+    'src/assets/images/contact/support-professional.jpg',      // ~86K
+    'src/assets/images/attorneys/attorney-3.jpg',
   ];
 
   for (const imagePath of criticalImages) {

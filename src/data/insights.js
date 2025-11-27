@@ -1,9 +1,14 @@
-// Insight thumbnail images
+// Insight thumbnail images (JPG and WebP for optimal performance)
 import insight1 from '../assets/images/insights/insight-1.jpg'
+import insight1WebP from '../assets/images/insights/insight-1.webp'
 import insight2 from '../assets/images/insights/insight-2.jpg'
+import insight2WebP from '../assets/images/insights/insight-2.webp'
 import insight3 from '../assets/images/insights/insight-3.jpg'
+import insight3WebP from '../assets/images/insights/insight-3.webp'
 import insight4 from '../assets/images/insights/insight-4.jpg'
+import insight4WebP from '../assets/images/insights/insight-4.webp'
 import insight5 from '../assets/images/insights/insight-5.jpg'
+import insight5WebP from '../assets/images/insights/insight-5.webp'
 
 export const insights = [
   {
@@ -14,6 +19,7 @@ export const insights = [
       'A look at how the top 10 litigators combine Chambers feedback, CRM telemetry, and editorial calendars to capture premium mandates.',
     readTime: '9 min read',
     image: insight1,
+    imageWebP: insight1WebP,
     content: `
 # Designing a Revenue Playbook for $1B Litigation Teams
 
@@ -85,6 +91,7 @@ Ready to design your revenue playbook? Start by auditing your current business d
     summary: 'Predictive alerts, diligence content hubs, and investor comms cadences that trimmed 4 weeks off approvals.',
     readTime: '6 min read',
     image: insight2,
+    imageWebP: insight2WebP,
     content: `
 # Signal-Based Deal Marketing in Volatile Markets
 
@@ -159,6 +166,7 @@ The firms winning complex cross-border mandates are those who've embraced predic
       'Lessons from energy, fintech, and transport incidents where legal, PR, and IR worked from one script to regain trust.',
     readTime: '7 min read',
     image: insight3,
+    imageWebP: insight3WebP,
     content: `
 # Building an Integrated Issues Room in 48 Hours
 
@@ -271,6 +279,7 @@ Are you prepared for your next crisis? The time to build your issues room playbo
       'From first-touch personalization to AI routing, see the workflows that gave partners full visibility without extra admin load.',
     readTime: '5 min read',
     image: insight4,
+    imageWebP: insight4WebP,
     content: `
 # How Intake Automation Elevated a Top Boutique
 
@@ -432,6 +441,7 @@ Is your intake process working for or against your client experience goals?
       'Research labs, multimedia storytelling, and award submissions synchronized to boost Chambers, Legal 500, and media impact.',
     readTime: '8 min read',
     image: insight5,
+    imageWebP: insight5WebP,
     content: `
 # Blueprint for a Tier-One Authority Program
 

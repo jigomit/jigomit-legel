@@ -42,7 +42,10 @@ useHead(
     <div class="insight-grid">
       <article v-for="post in insights" :key="post.title" class="insight-card">
         <div class="insight-image-wrapper">
-          <img :src="post.image" :alt="post.title" loading="lazy" class="insight-thumbnail" />
+          <picture>
+            <source :srcset="post.imageWebP" type="image/webp" />
+            <img :src="post.image" :alt="post.title" loading="lazy" class="insight-thumbnail" />
+          </picture>
         </div>
         <p class="category" :class="{ 'insight-accent': isHighlightedCategory(post.category) }">
           {{ post.category }}

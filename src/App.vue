@@ -28,6 +28,7 @@ const showBackToTop = ref(false)
 
 let observer
 let ticking = false // Throttle flag for scroll handler
+let prefersInstantReveal = false // Cached matchMedia result to avoid forced reflows
 
 const applyTheme = (value) => {
   if (typeof document !== 'undefined') {
@@ -57,9 +58,10 @@ const handleScroll = () => {
 }
 
 const scrollToTop = () => {
+  // Use instant scroll to avoid forced reflows from smooth scrolling
   window.scrollTo({
     top: 0,
-    behavior: 'smooth'
+    behavior: 'auto'
   })
 }
 
@@ -80,16 +82,22 @@ onMounted(() => {
 
   applyTheme(theme.value)
 
+  // Cache matchMedia result once to avoid forced reflows on every route change
+  prefersInstantReveal = window.matchMedia('(max-width: 768px)').matches
+
   // Back to top button scroll listener
-  window.addEventListener('scroll', handleScroll)
+  window.addEventListener('scroll', handleScroll, { passive: true })
 
   observer = new IntersectionObserver(
     (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible')
-          observer.unobserve(entry.target)
-        }
+      // Batch all classList operations in a single RAF to avoid forced reflows
+      requestAnimationFrame(() => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible')
+            observer.unobserve(entry.target)
+          }
+        })
       })
     },
     { threshold: 0.2 }
@@ -98,7 +106,7 @@ onMounted(() => {
   // Re-observe elements whenever the route changes
   const observeElements = () => {
     const animatedBlocks = document.querySelectorAll('[data-animate]')
-    const prefersInstantReveal = window.matchMedia('(max-width: 768px)').matches
+    // Use cached matchMedia result to avoid forced reflows
     animatedBlocks.forEach((block) => {
       // Note: Animation delays now handled by CSS nth-child to avoid forced reflows
       if (prefersInstantReveal) {
@@ -117,10 +125,11 @@ onMounted(() => {
     if (to.hash) {
       const target = document.querySelector(to.hash)
       if (target) {
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        // Use instant scroll to avoid continuous layout reads from smooth scrolling
+        target.scrollIntoView({ behavior: 'auto', block: 'start' })
       }
     } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+      window.scrollTo({ top: 0, behavior: 'auto' })
     }
     // Use requestAnimationFrame to batch DOM operations and avoid forced reflows
     requestAnimationFrame(() => {
