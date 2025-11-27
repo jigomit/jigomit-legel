@@ -77,7 +77,7 @@ const goBack = () => {
 }
 
 .error-code {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
   font-size: clamp(6rem, 15vw, 10rem);
   font-weight: 700;
   background: var(--heading-gradient);
