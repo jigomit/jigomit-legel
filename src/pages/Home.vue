@@ -1,8 +1,13 @@
 <script setup>
 import { useSEO, useStructuredData, getLocalBusinessSchema, getBreadcrumbSchema } from '../composables/useSEO'
 import { useHead } from '@unhead/vue'
+import OptimizedImage from '../components/OptimizedImage.vue'
+
+// Hero images - JPEG and WebP versions
 import heroIllustration from '../assets/images/hero/lawyer-professional-new.jpg'
+import heroIllustrationWebP from '../assets/images/hero/lawyer-professional-new.webp'
 import highCourtImage from '../assets/high-court.jpg'
+import highCourtImageWebP from '../assets/high-court.webp'
 
 // SEO Configuration
 useSEO({
@@ -184,7 +189,7 @@ const figureBadges = [
         </div>
         <div class="hero-visual">
           <div class="hero-figure">
-            <img :src="heroIllustration" alt="Professional lawyer providing legal counsel at Legal Crest law firm office" />
+            <OptimizedImage :src="heroIllustration" :src-webp="heroIllustrationWebP" alt="Professional lawyer providing legal counsel at Legal Crest law firm office" loading="eager" />
             <div class="figure-overlay">
               <p class="panel-label">Legal Crest Law Firm</p>
               <h4>Professional Excellence. Proven Results.</h4>
@@ -202,7 +207,7 @@ const figureBadges = [
           <div class="visual-card high-court-showcase">
             <p class="panel-label">Trusted Legal Authority</p>
             <div class="high-court-image-container">
-              <img :src="highCourtImage" alt="United States Supreme Court building representing legal authority and judicial expertise" class="high-court-image" />
+              <OptimizedImage :src="highCourtImage" :src-webp="highCourtImageWebP" alt="United States Supreme Court building representing legal authority and judicial expertise" class="high-court-image" />
             </div>
             <p class="high-court-caption">Recognized expertise in judicial proceedings and legal advocacy</p>
           </div>
