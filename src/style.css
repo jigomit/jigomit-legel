@@ -614,6 +614,7 @@ h3 {
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.08);
   min-height: 500px;
+  aspect-ratio: 3 / 2; /* Reserve space based on 500x333 image to prevent CLS */
   box-shadow: 0 40px 80px rgba(2, 6, 23, 0.65);
 }
 
@@ -1002,6 +1003,7 @@ h3 {
   border-radius: 16px;
   padding: 0.5rem;
   overflow: hidden;
+  aspect-ratio: 800 / 593; /* Reserve space based on 800x593 image to prevent CLS */
   background: linear-gradient(135deg, rgba(6, 182, 212, 0.05), rgba(168, 85, 247, 0.05));
 }
 
@@ -3382,6 +3384,7 @@ h3 {
   height: 220px;
   overflow: hidden;
   position: relative;
+  aspect-ratio: 4 / 3; /* Reserve space based on 800x600 images to prevent CLS */
 }
 
 .practice-image {
@@ -3630,6 +3633,7 @@ h3 {
   height: 350px;
   overflow: hidden;
   position: relative;
+  aspect-ratio: 4 / 5; /* Reserve space based on 400x500 images to prevent CLS */
   background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(168, 85, 247, 0.1));
 }
 

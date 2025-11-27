@@ -189,7 +189,14 @@ const figureBadges = [
         </div>
         <div class="hero-visual">
           <div class="hero-figure">
-            <OptimizedImage :src="heroIllustration" :src-webp="heroIllustrationWebP" alt="Professional lawyer providing legal counsel at Legal Crest law firm office" loading="eager" />
+            <OptimizedImage
+              :src="heroIllustration"
+              :src-webp="heroIllustrationWebP"
+              alt="Professional lawyer providing legal counsel at Legal Crest law firm office"
+              width="500"
+              height="333"
+              loading="eager"
+            />
             <div class="figure-overlay">
               <p class="panel-label">Legal Crest Law Firm</p>
               <h4>Professional Excellence. Proven Results.</h4>
@@ -207,7 +214,14 @@ const figureBadges = [
           <div class="visual-card high-court-showcase">
             <p class="panel-label">Trusted Legal Authority</p>
             <div class="high-court-image-container">
-              <OptimizedImage :src="highCourtImage" :src-webp="highCourtImageWebP" alt="United States Supreme Court building representing legal authority and judicial expertise" class="high-court-image" />
+              <OptimizedImage
+                :src="highCourtImage"
+                :src-webp="highCourtImageWebP"
+                alt="United States Supreme Court building representing legal authority and judicial expertise"
+                width="800"
+                height="593"
+                class="high-court-image"
+              />
             </div>
             <p class="high-court-caption">Recognized expertise in judicial proceedings and legal advocacy</p>
           </div>
@@ -227,7 +241,14 @@ const figureBadges = [
       <div class="practice-grid">
         <article v-for="area in practiceAreas" :key="area.title" class="practice-card">
           <div class="practice-image-wrapper">
-            <img :src="area.image" :alt="`${area.title} - ${area.description.substring(0, 60)}...`" loading="lazy" class="practice-image" />
+            <img
+              :src="area.image"
+              :alt="`${area.title} - ${area.description.substring(0, 60)}...`"
+              width="800"
+              height="600"
+              loading="lazy"
+              class="practice-image"
+            />
           </div>
           <div class="practice-content">
             <span class="practice-icon">{{ area.icon }}</span>
@@ -254,7 +275,14 @@ const figureBadges = [
       <div class="attorneys-grid">
         <article v-for="attorney in attorneys" :key="attorney.name" class="attorney-card">
           <div class="attorney-image-wrapper">
-            <img :src="attorney.image" :alt="`${attorney.name}, ${attorney.title} specializing in ${attorney.specialization}`" loading="lazy" class="attorney-photo" />
+            <img
+              :src="attorney.image"
+              :alt="`${attorney.name}, ${attorney.title} specializing in ${attorney.specialization}`"
+              width="400"
+              height="500"
+              loading="lazy"
+              class="attorney-photo"
+            />
           </div>
           <div class="attorney-info">
             <h3>{{ attorney.name }}</h3>
