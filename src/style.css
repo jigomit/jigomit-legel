@@ -2849,6 +2849,28 @@ h3 {
   transform: none;
 }
 
+/* Staggered animation delays using nth-child to avoid forced reflows */
+[data-animate]:nth-child(1) { --delay: 0s; }
+[data-animate]:nth-child(2) { --delay: 0.04s; }
+[data-animate]:nth-child(3) { --delay: 0.08s; }
+[data-animate]:nth-child(4) { --delay: 0.12s; }
+[data-animate]:nth-child(5) { --delay: 0.16s; }
+[data-animate]:nth-child(6) { --delay: 0.2s; }
+[data-animate]:nth-child(7) { --delay: 0.24s; }
+[data-animate]:nth-child(8) { --delay: 0.28s; }
+[data-animate]:nth-child(9) { --delay: 0.32s; }
+[data-animate]:nth-child(10) { --delay: 0.36s; }
+[data-animate]:nth-child(11) { --delay: 0.4s; }
+[data-animate]:nth-child(12) { --delay: 0.44s; }
+[data-animate]:nth-child(13) { --delay: 0.48s; }
+[data-animate]:nth-child(14) { --delay: 0.52s; }
+[data-animate]:nth-child(15) { --delay: 0.56s; }
+[data-animate]:nth-child(16) { --delay: 0.6s; }
+[data-animate]:nth-child(17) { --delay: 0.64s; }
+[data-animate]:nth-child(18) { --delay: 0.68s; }
+[data-animate]:nth-child(19) { --delay: 0.72s; }
+[data-animate]:nth-child(20) { --delay: 0.76s; }
+
 /* ===== RESPONSIVE ===== */
 @media (prefers-reduced-motion: reduce) {
   *,

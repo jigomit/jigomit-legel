@@ -27,6 +27,7 @@ const theme = ref('dark')
 const showBackToTop = ref(false)
 
 let observer
+let ticking = false // Throttle flag for scroll handler
 
 const applyTheme = (value) => {
   if (typeof document !== 'undefined') {
@@ -46,7 +47,13 @@ const toggleTheme = () => {
 }
 
 const handleScroll = () => {
-  showBackToTop.value = window.scrollY > 300
+  if (!ticking) {
+    window.requestAnimationFrame(() => {
+      showBackToTop.value = window.scrollY > 300
+      ticking = false
+    })
+    ticking = true
+  }
 }
 
 const scrollToTop = () => {
@@ -92,8 +99,8 @@ onMounted(() => {
   const observeElements = () => {
     const animatedBlocks = document.querySelectorAll('[data-animate]')
     const prefersInstantReveal = window.matchMedia('(max-width: 768px)').matches
-    animatedBlocks.forEach((block, index) => {
-      block.style.setProperty('--delay', `${index * 0.04}s`)
+    animatedBlocks.forEach((block) => {
+      // Note: Animation delays now handled by CSS nth-child to avoid forced reflows
       if (prefersInstantReveal) {
         block.classList.add('is-visible')
         observer.unobserve(block)
@@ -115,7 +122,10 @@ onMounted(() => {
     } else {
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
-    setTimeout(observeElements, 50)
+    // Use requestAnimationFrame to batch DOM operations and avoid forced reflows
+    requestAnimationFrame(() => {
+      observeElements()
+    })
   })
 })
 
