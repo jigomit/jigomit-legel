@@ -199,7 +199,7 @@ const figureBadges = [
             />
             <div class="figure-overlay">
               <p class="panel-label">Legal Crest Law Firm</p>
-              <h4>Professional Excellence. Proven Results.</h4>
+              <p class="figure-title">Professional Excellence. Proven Results.</p>
               <p>
                 Our experienced attorneys combine legal expertise with personalized attention to deliver exceptional outcomes for every client.
               </p>
