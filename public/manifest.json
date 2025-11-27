@@ -1,0 +1,20 @@
+{
+  "name": "Legal Crest - Legal Marketing Studio",
+  "short_name": "Legal Crest",
+  "description": "Elite legal marketing studio for Am Law 100 firms and boutiques",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity"],
+  "lang": "en-US"
+}
