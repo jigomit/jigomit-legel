@@ -2,32 +2,51 @@
 import { computed } from 'vue'
 
 const props = defineProps({
-  src: String,        // Path to JPEG image
-  srcWebp: String,    // Path to WebP image (optional, auto-generated if not provided)
-  alt: String,
-  width: [Number, String],   // Image width for CLS prevention
-  height: [Number, String],  // Image height for CLS prevention
+  src: { type: String, required: true },
+  srcWebp: String,
+  alt: { type: String, default: '' },
+  width: [Number, String],
+  height: [Number, String],
   loading: {
     type: String,
-    default: 'lazy'
+    default: 'lazy',
   },
   class: String,
+  sizes: {
+    type: String,
+    default: '100vw',
+  },
+  srcset: String,
+  srcsetWebp: String,
+  decoding: {
+    type: String,
+    default: 'async',
+  },
+  fetchpriority: {
+    type: String,
+    default: 'auto',
+  },
 })
 
-// Auto-generate WebP path if not provided
-const webpSrc = computed(() => props.srcWebp || props.src.replace(/\.jpg$/, '.webp'))
+const defaultWebp = computed(() => props.srcWebp || props.src.replace(/\.jpg$/, '.webp'))
+const resolvedWebpSrcset = computed(() => props.srcsetWebp || props.srcset)
+const resolvedSrcset = computed(() => props.srcset || props.src)
 </script>
 
 <template>
   <picture>
-    <source :srcset="webpSrc" type="image/webp" />
+    <source :srcset="resolvedWebpSrcset || defaultWebp" :sizes="sizes" type="image/webp" />
     <img
       :src="src"
+      :srcset="resolvedSrcset"
       :alt="alt"
       :width="width"
       :height="height"
       :loading="loading"
       :class="class"
+      :sizes="sizes"
+      :decoding="decoding"
+      :fetchpriority="fetchpriority"
     />
   </picture>
 </template>

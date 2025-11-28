@@ -2,6 +2,7 @@
 import { useSEO, useStructuredData, getLocalBusinessSchema, getBreadcrumbSchema, getAttorneyListSchema, getReviewListSchema } from '../composables/useSEO'
 import { useHead } from '@unhead/vue'
 import OptimizedImage from '../components/OptimizedImage.vue'
+import { useRoutePrefetch } from '../composables/useRoutePrefetch'
 
 // Hero images - JPEG and WebP versions
 import heroIllustration from '../assets/images/hero/lawyer-professional-new.jpg'
@@ -193,6 +194,8 @@ useHead(
     })
   )
 )
+
+const { prefetchRoute } = useRoutePrefetch()
 </script>
 
 <template>
@@ -205,10 +208,35 @@ useHead(
             Expert Legal Representation You Can Trust
           </h1>
           <p class="lead">
-            Legal Crest is a full-service law firm providing expert legal counsel across <router-link to="/services" class="inline-link">corporate law, litigation, real estate, and crisis management</router-link>. With over 25 years of experience, we deliver results-driven legal solutions tailored to your unique needs. <router-link to="/contact" class="inline-link">Schedule a free consultation</router-link> to discuss your legal needs.
+            Legal Crest is a full-service law firm providing expert legal counsel across
+            <router-link
+              to="/services"
+              class="inline-link"
+              @mouseenter="prefetchRoute('/services')"
+              @focus="prefetchRoute('/services')"
+            >
+              corporate law, litigation, real estate, and crisis management
+            </router-link>.
+            With over 25 years of experience, we deliver results-driven legal solutions tailored to your unique needs.
+            <router-link
+              to="/contact"
+              class="inline-link"
+              @mouseenter="prefetchRoute('/contact')"
+              @focus="prefetchRoute('/contact')"
+            >
+              Schedule a free consultation
+            </router-link>
+            to discuss your legal needs.
           </p>
           <div class="cta-group">
-            <router-link to="/contact" class="btn primary">Schedule Free Consultation</router-link>
+            <router-link
+              to="/contact"
+              class="btn primary"
+              @mouseenter="prefetchRoute('/contact')"
+              @focus="prefetchRoute('/contact')"
+            >
+              Schedule Free Consultation
+            </router-link>
             <a href="tel:+13325557180" class="btn ghost">Call Now: +1 (332) 555-7180</a>
           </div>
           <div class="hero-metrics">
@@ -227,6 +255,8 @@ useHead(
               width="500"
               height="333"
               loading="eager"
+              sizes="(min-width: 1024px) 45vw, 100vw"
+              fetchpriority="high"
             />
             <div class="figure-overlay">
               <p class="panel-label">Legal Crest Law Firm</p>
@@ -252,6 +282,7 @@ useHead(
                 width="800"
                 height="593"
                 class="high-court-image"
+                sizes="(min-width: 1024px) 40vw, 100vw"
               />
             </div>
             <p class="high-court-caption">Recognized expertise in judicial proceedings and legal advocacy</p>
@@ -272,28 +303,41 @@ useHead(
       <div class="practice-grid">
         <article v-for="area in practiceAreas" :key="area.title" class="practice-card">
           <div class="practice-image-wrapper">
-            <picture>
-              <source :srcset="area.imageWebP" type="image/webp" />
-              <img
-                :src="area.image"
-                :alt="`${area.title} - ${area.description.substring(0, 60)}...`"
-                width="800"
-                height="600"
-                loading="lazy"
-                class="practice-image"
-              />
-            </picture>
+            <OptimizedImage
+              :src="area.image"
+              :src-webp="area.imageWebP"
+              :alt="`${area.title} - ${area.description.substring(0, 60)}...`"
+              width="800"
+              height="600"
+              loading="lazy"
+              class="practice-image"
+              sizes="(min-width: 1280px) 25vw, (min-width: 768px) 45vw, 100vw"
+            />
           </div>
           <div class="practice-content">
             <span class="practice-icon">{{ area.icon }}</span>
             <h3>{{ area.title }}</h3>
             <p>{{ area.description }}</p>
-            <router-link :to="{ path: '/services', query: { service: area.focus } }" class="btn text">Learn More →</router-link>
+            <router-link
+              :to="{ path: '/services', query: { service: area.focus } }"
+              class="btn text"
+              @mouseenter="prefetchRoute({ path: '/services', query: { service: area.focus } })"
+              @focus="prefetchRoute({ path: '/services', query: { service: area.focus } })"
+            >
+              Learn More →
+            </router-link>
           </div>
         </article>
       </div>
       <div class="cta-center">
-        <router-link to="/services" class="btn primary">View All Services</router-link>
+        <router-link
+          to="/services"
+          class="btn primary"
+          @mouseenter="prefetchRoute('/services')"
+          @focus="prefetchRoute('/services')"
+        >
+          View All Services
+        </router-link>
       </div>
     </section>
 
@@ -381,7 +425,14 @@ useHead(
         <h2>Ready to Discuss Your Legal Needs?</h2>
         <p>Schedule a free consultation with our experienced legal team today.</p>
         <div class="cta-group">
-          <router-link to="/contact" class="btn primary large">Schedule Free Consultation</router-link>
+          <router-link
+            to="/contact"
+            class="btn primary large"
+            @mouseenter="prefetchRoute('/contact')"
+            @focus="prefetchRoute('/contact')"
+          >
+            Schedule Free Consultation
+          </router-link>
           <a href="tel:+13325557180" class="btn ghost large">Call: +1 (332) 555-7180</a>
         </div>
         <p class="cta-note">Available 24/7 for urgent legal matters</p>

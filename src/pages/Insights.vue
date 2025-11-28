@@ -2,6 +2,7 @@
 import { insights } from '../data/insights'
 import { useSEO, useStructuredData, getBreadcrumbSchema } from '../composables/useSEO'
 import { useHead } from '@unhead/vue'
+import { useRoutePrefetch } from '../composables/useRoutePrefetch'
 
 const highlightedCategories = [
   'Am Law Growth Ops',
@@ -12,6 +13,7 @@ const highlightedCategories = [
 ]
 
 const isHighlightedCategory = (category) => highlightedCategories.includes(category)
+const { prefetchRoute } = useRoutePrefetch()
 
 // SEO Configuration
 useSEO({
@@ -54,7 +56,14 @@ useHead(
         <p>{{ post.summary }}</p>
         <div class="insight-meta">
           <span>{{ post.readTime }}</span>
-          <router-link :to="`/insights/${post.slug}`" class="btn text">Read article →</router-link>
+          <router-link
+            :to="`/insights/${post.slug}`"
+            class="btn text"
+            @mouseenter="prefetchRoute(`/insights/${post.slug}`)"
+            @focus="prefetchRoute(`/insights/${post.slug}`)"
+          >
+            Read article →
+          </router-link>
         </div>
       </article>
     </div>

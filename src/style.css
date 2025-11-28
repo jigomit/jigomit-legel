@@ -65,6 +65,18 @@
   --layout-max-width: 1440px;
 }
 
+/* Page transitions */
+.page-fade-enter-active,
+.page-fade-leave-active {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.page-fade-enter-from,
+.page-fade-leave-to {
+  opacity: 0;
+  transform: translate3d(0, 10px, 0);
+}
+
 [data-theme='light'] {
   --bg-primary: #f8fafc;
   --bg-secondary: #e2e8f0;

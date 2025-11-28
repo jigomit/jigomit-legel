@@ -4,6 +4,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { useHead } from '@unhead/vue'
 import brandMark from './assets/logo.svg'
 import { useStructuredData, getOrganizationSchema, getWebSiteSchema } from './composables/useSEO'
+import { useRoutePrefetch } from './composables/useRoutePrefetch'
 
 const router = useRouter()
 const route = useRoute()
@@ -27,6 +28,7 @@ const contactChannels = [
 const currentYear = new Date().getFullYear()
 const theme = ref('dark')
 const showBackToTop = ref(false)
+const { prefetchRoute } = useRoutePrefetch()
 
 useHead({
   htmlAttrs: { lang: 'en' },
@@ -221,10 +223,25 @@ onBeforeUnmount(() => {
         </div>
       </router-link>
       <div class="nav-links">
-        <router-link v-for="link in navLinks" :key="link.target" :to="link.target">{{ link.label }}</router-link>
+        <router-link
+          v-for="link in navLinks"
+          :key="link.target"
+          :to="link.target"
+          @mouseenter="handlePrefetch(link.target)"
+          @focus="handlePrefetch(link.target)"
+        >
+          {{ link.label }}
+        </router-link>
       </div>
       <div class="nav-actions">
-        <router-link to="/book-consultation" class="btn primary">Book Consultation</router-link>
+        <router-link
+          to="/book-consultation"
+          class="btn primary"
+          @mouseenter="handlePrefetch('/book-consultation')"
+          @focus="handlePrefetch('/book-consultation')"
+        >
+          Book Consultation
+        </router-link>
         <button
           type="button"
           class="btn icon theme-toggle"
@@ -238,7 +255,11 @@ onBeforeUnmount(() => {
     </nav>
 
     <main>
-      <router-view />
+      <Transition name="page-fade" mode="out-in">
+        <router-view v-slot="{ Component }">
+          <component :is="Component" />
+        </router-view>
+      </Transition>
     </main>
 
     <footer class="footer" data-animate>
@@ -297,3 +318,6 @@ onBeforeUnmount(() => {
     </button>
   </div>
 </template>
+const handlePrefetch = (target) => {
+  prefetchRoute(target)
+}

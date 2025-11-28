@@ -3,6 +3,8 @@ import { services } from '../data/services'
 import { useSEO, useStructuredData, getServiceSchema, getBreadcrumbSchema, getServiceCatalogSchema } from '../composables/useSEO'
 import { useHead } from '@unhead/vue'
 import { useRouter } from 'vue-router'
+import OptimizedImage from '../components/OptimizedImage.vue'
+import { useRoutePrefetch } from '../composables/useRoutePrefetch'
 
 // SEO Configuration
 useSEO({
@@ -35,6 +37,8 @@ const router = useRouter()
 const navigateToService = (slug) => {
   router.push(`/services/${slug}`)
 }
+
+const { prefetchRoute } = useRoutePrefetch()
 </script>
 
 <template>
@@ -58,12 +62,20 @@ const navigateToService = (slug) => {
         @click="navigateToService(service.slug)"
         @keydown.enter.prevent="navigateToService(service.slug)"
         @keydown.space.prevent="navigateToService(service.slug)"
+        @mouseenter="prefetchRoute(`/services/${service.slug}`)"
+        @focus="prefetchRoute(`/services/${service.slug}`)"
       >
         <div class="service-photo">
-          <picture>
-            <source :srcset="service.imageWebP" type="image/webp" />
-            <img :src="service.image" :alt="`${service.title} preview`" loading="lazy" />
-          </picture>
+          <OptimizedImage
+            :src="service.image"
+            :src-webp="service.imageWebP"
+            :alt="`${service.title} preview`"
+            width="800"
+            height="600"
+            loading="lazy"
+            class="service-photo-img"
+            sizes="(min-width: 1280px) 25vw, (min-width: 768px) 45vw, 100vw"
+          />
           <span class="service-icon">{{ service.icon }}</span>
         </div>
         <h3>{{ service.title }}</h3>
@@ -80,6 +92,8 @@ const navigateToService = (slug) => {
             @click.stop
             @keydown.enter.stop
             @keydown.space.stop.prevent
+            @mouseenter="prefetchRoute({ path: '/book-consultation', query: { service: service.focus } })"
+            @focus="prefetchRoute({ path: '/book-consultation', query: { service: service.focus } })"
           >
             Book this service
           </router-link>

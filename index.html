@@ -27,6 +27,16 @@
     <noscript>
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=optional" />
     </noscript>
+    <link rel="modulepreload" href="/src/main.js" crossorigin />
+    <link rel="preload" href="/src/style.css" as="style" />
+    <link
+      rel="preload"
+      as="image"
+      href="/src/assets/images/hero/lawyer-professional-new.webp"
+      imagesrcset="/src/assets/images/hero/lawyer-professional-new.webp 1x, /src/assets/images/hero/lawyer-professional-new.jpg 2x"
+      imagesizes="100vw"
+      fetchpriority="high"
+    />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
