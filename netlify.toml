@@ -5,11 +5,12 @@
 [build.environment]
   NODE_VERSION = "20"
 
-# SPA redirect for Vue Router
+# 404 redirect for SSG (Static Site Generation)
+# Note: This is NOT a SPA redirect - we serve pre-rendered HTML files directly
 [[redirects]]
   from = "/*"
-  to = "/index.html"
-  status = 200
+  to = "/not-found.html"
+  status = 404
 
 # Security headers + Performance optimization
 [[headers]]
