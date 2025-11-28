@@ -70,17 +70,9 @@ const routes = [
 export default routes
 
 // Scroll behavior configuration
+// Note: Actual scroll handling is done in App.vue's router.afterEach hook
+// to avoid conflicts and forced reflows. This returns an empty config.
 export const scrollBehavior = (to, from, savedPosition) => {
-  if (savedPosition) {
-    return savedPosition
-  }
-
-  if (to.hash) {
-    return {
-      el: to.hash,
-      behavior: 'smooth',
-    }
-  }
-
-  return { top: 0 }
+  // Return empty config - let App.vue handle all scrolling
+  return false
 }

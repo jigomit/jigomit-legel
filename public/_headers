@@ -1,0 +1,34 @@
+# Netlify Headers Configuration
+# This file enables Early Resource Hints to reduce network dependency chain
+# NOTE: Update asset hashes after each build to match dist/assets/*.js files
+
+# Global headers for all routes - preload critical framework chunks
+/*
+  # Preload critical JavaScript chunks (enables parallel download before HTML parsing completes)
+  Link: </assets/vue-H2QVL1NI.js>; rel=modulepreload; as=script; crossorigin=anonymous
+  Link: </assets/vendor-CyR-0Wi4.js>; rel=modulepreload; as=script; crossorigin=anonymous
+  Link: </assets/app-DVwhVZcI.js>; rel=modulepreload; as=script; crossorigin=anonymous
+
+  # Preload critical CSS (non-blocking since already async-loaded)
+  Link: </assets/app-cPmijPxh.css>; rel=preload; as=style
+
+  # Security headers
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+  # Cache static assets aggressively (immutable hashed files)
+  Cache-Control: public, max-age=31536000, immutable
+
+# Home page specific - preload Home component
+/
+  Link: </assets/Home-CG1ydYYQ.js>; rel=modulepreload; as=script; crossorigin=anonymous
+  Link: </assets/OptimizedImage-Dp5BPQz2.js>; rel=modulepreload; as=script; crossorigin=anonymous
+
+# HTML files - shorter cache for content updates
+/*.html
+  Cache-Control: public, max-age=3600, must-revalidate
+
+# Root HTML
+/index.html
+  Cache-Control: public, max-age=3600, must-revalidate

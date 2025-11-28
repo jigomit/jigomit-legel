@@ -38,7 +38,6 @@ const asyncCSSPlugin = () => ({
     order: 'post',
     handler(html) {
       // Transform CSS link tags to load asynchronously with noscript fallback
-      let primaryStylesCaptured = false
       return html.replace(
         /<link([^>]*?)rel="stylesheet"([^>]*?)>/g,
         (match, before, after) => {
@@ -47,16 +46,12 @@ const asyncCSSPlugin = () => ({
             return match
           }
 
-          const isAppAsset = /href="[^"]*\/assets\//.test(match)
-          if (isAppAsset && !primaryStylesCaptured) {
-            primaryStylesCaptured = true
-            return `<link${before}rel="stylesheet"${after} data-critical>`
-          }
-
-          if (!isAppAsset) {
+          // Skip external resources like Google Fonts
+          if (!match.includes('/assets/')) {
             return match
           }
-          // Add media="print" onload trick for non-blocking CSS + noscript fallback
+
+          // Make all app CSS non-render-blocking with media="print" onload trick + noscript fallback
           return `<link${before}rel="stylesheet"${after} media="print" onload="this.media='all'"><noscript><link${before}rel="stylesheet"${after}></noscript>`
         }
       )
@@ -73,7 +68,8 @@ export default defineConfig({
     compressionPlugin(),
   ],
   ssgOptions: {
-    script: 'async',
+    // Removed 'script: async' to use default module behavior for better dependency ordering
+    // Modules are already optimized for parallel loading without explicit async
     formatting: 'minify',
   },
   build: {

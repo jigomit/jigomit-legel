@@ -69,6 +69,7 @@
 .page-fade-enter-active,
 .page-fade-leave-active {
   transition: opacity 0.25s ease, transform 0.25s ease;
+  will-change: opacity, transform;
 }
 
 .page-fade-enter-from,
@@ -80,6 +81,7 @@
 .skeleton-fade-enter-active,
 .skeleton-fade-leave-active {
   transition: opacity 0.2s ease;
+  will-change: opacity;
 }
 
 .skeleton-fade-enter-from,
@@ -109,8 +111,10 @@
   justify-content: flex-start;
   gap: 1rem;
   pointer-events: none;
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.55));
-  backdrop-filter: blur(12px);
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.85));
+  /* Removed backdrop-filter: blur(12px) - expensive GPU operation causing forced reflows */
+  /* Increased background opacity to compensate for removed blur */
+  will-change: opacity;
 }
 
 .skeleton-line {
