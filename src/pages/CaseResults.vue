@@ -1,5 +1,5 @@
 <script setup>
-import { useSEO, useStructuredData, getBreadcrumbSchema } from '../composables/useSEO'
+import { useSEO, useStructuredData, getBreadcrumbSchema, getReviewListSchema } from '../composables/useSEO'
 import { useHead } from '@unhead/vue'
 
 // SEO Configuration
@@ -65,6 +65,21 @@ const testimonials = [
     result: 'ESG score up 32% · Anchor investors added within 60 days',
   },
 ]
+
+useHead(
+  useStructuredData(
+    getReviewListSchema(testimonials, {
+      pageTitle: 'Legal Crest Case Results and Reviews',
+      reviewNamePrefix: 'Legal Crest Case Result',
+      averageRating: '4.95',
+      itemReviewed: {
+        '@type': 'ProfessionalService',
+        name: 'Legal Crest Strategy Engagements',
+        url: 'https://legalcrest.com/case-results',
+      },
+    })
+  )
+)
 </script>
 
 <template>

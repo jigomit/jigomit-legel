@@ -1,5 +1,5 @@
 <script setup>
-import { useSEO, useStructuredData, getLocalBusinessSchema, getBreadcrumbSchema } from '../composables/useSEO'
+import { useSEO, useStructuredData, getLocalBusinessSchema, getBreadcrumbSchema, getAttorneyListSchema, getReviewListSchema } from '../composables/useSEO'
 import { useHead } from '@unhead/vue'
 import OptimizedImage from '../components/OptimizedImage.vue'
 
@@ -176,6 +176,23 @@ const figureBadges = [
   { label: 'Successful Cases', value: '10,000+' },
   { label: 'Response Time', value: '< 24 hrs' },
 ]
+
+// Structured data for attorneys and testimonials
+useHead(useStructuredData(getAttorneyListSchema(attorneys)))
+useHead(
+  useStructuredData(
+    getReviewListSchema(testimonials, {
+      pageTitle: 'Legal Crest Client Testimonials',
+      reviewNamePrefix: 'Legal Crest Client Review',
+      averageRating: '4.9',
+      itemReviewed: {
+        '@type': 'LegalService',
+        name: 'Legal Crest Legal Marketing Services',
+        url: 'https://legalcrest.com/services',
+      },
+    })
+  )
+)
 </script>
 
 <template>

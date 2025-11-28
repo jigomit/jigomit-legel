@@ -1,6 +1,6 @@
 <script setup>
 import { services } from '../data/services'
-import { useSEO, useStructuredData, getServiceSchema, getBreadcrumbSchema } from '../composables/useSEO'
+import { useSEO, useStructuredData, getServiceSchema, getBreadcrumbSchema, getServiceCatalogSchema } from '../composables/useSEO'
 import { useHead } from '@unhead/vue'
 import { useRouter } from 'vue-router'
 
@@ -27,6 +27,9 @@ useHead(
 services.forEach((service) => {
   useHead(useStructuredData(getServiceSchema(service)))
 })
+
+// Publish OfferCatalog schema for the entire services list
+useHead(useStructuredData(getServiceCatalogSchema(services)))
 
 const router = useRouter()
 const navigateToService = (slug) => {

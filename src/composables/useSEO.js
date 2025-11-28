@@ -16,11 +16,17 @@ export function useSEO(options = {}) {
     author = 'Legal Crest',
     publishedTime = null,
     modifiedTime = null,
+    locale = 'en_US',
+    siteName = 'Legal Crest',
+    ogImageAlt = 'Legal Crest legal marketing experts collaborating with clients',
+    twitterHandle = '@legalcrest',
+    twitterImageAlt = null,
   } = options
 
   const baseUrl = 'https://legalcrest.com'
   const fullCanonical = canonical ? `${baseUrl}${canonical}` : baseUrl
   const fullOgImage = ogImage.startsWith('http') ? ogImage : `${baseUrl}${ogImage}`
+  const computedTwitterImageAlt = twitterImageAlt || ogImageAlt
 
   const headConfig = {
     title,
@@ -30,6 +36,7 @@ export function useSEO(options = {}) {
       { name: 'keywords', content: keywords },
       { name: 'author', content: author },
       { name: 'robots', content: 'index, follow' },
+       { name: 'language', content: locale },
 
       // Open Graph
       { property: 'og:type', content: ogType },
@@ -37,19 +44,24 @@ export function useSEO(options = {}) {
       { property: 'og:title', content: title },
       { property: 'og:description', content: description },
       { property: 'og:image', content: fullOgImage },
-      { property: 'og:site_name', content: 'Legal Crest' },
-      { property: 'og:locale', content: 'en_US' },
+      { property: 'og:image:alt', content: ogImageAlt },
+      { property: 'og:site_name', content: siteName },
+      { property: 'og:locale', content: locale },
 
       // Twitter Card
       { name: 'twitter:card', content: twitterCard },
+      { name: 'twitter:site', content: twitterHandle },
+      { name: 'twitter:creator', content: twitterHandle },
       { name: 'twitter:url', content: fullCanonical },
       { name: 'twitter:title', content: title },
       { name: 'twitter:description', content: description },
       { name: 'twitter:image', content: fullOgImage },
+      { name: 'twitter:image:alt', content: computedTwitterImageAlt },
     ],
     link: [
       // Canonical URL
       { rel: 'canonical', href: fullCanonical },
+      { rel: 'alternate', hreflang: 'en', href: fullCanonical },
     ],
   }
 
@@ -108,6 +120,37 @@ export function getOrganizationSchema() {
 }
 
 /**
+ * Generate WebSite schema with SearchAction for sitelinks search enhancements
+ */
+export function getWebSiteSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Legal Crest',
+    url: 'https://legalcrest.com',
+    inLanguage: 'en-US',
+    publisher: {
+      '@type': 'Organization',
+      name: 'Legal Crest',
+      url: 'https://legalcrest.com',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://legalcrest.com/favicon.svg',
+      },
+    },
+    sameAs: [
+      'https://linkedin.com/company/legalcrest',
+      'https://twitter.com/legalcrest',
+    ],
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: 'https://legalcrest.com/search?q={search_term_string}',
+      'query-input': 'required name=search_term_string',
+    },
+  }
+}
+
+/**
  * Generate LocalBusiness schema
  */
 export function getLocalBusinessSchema() {
@@ -146,6 +189,28 @@ export function getLocalBusinessSchema() {
       ratingValue: '4.9',
       reviewCount: '127',
     },
+  }
+}
+
+/**
+ * Generate schema for the entire services catalog
+ */
+export function getServiceCatalogSchema(services = [], baseUrl = 'https://legalcrest.com') {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'OfferCatalog',
+    name: 'Legal Crest Legal Marketing Services',
+    url: `${baseUrl}/services`,
+    itemListElement: services.map((service, index) => ({
+      '@type': 'Offer',
+      position: index + 1,
+      itemOffered: {
+        '@type': 'Service',
+        name: service.title,
+        description: service.description,
+        url: `${baseUrl}/services/${service.slug}`,
+      },
+    })),
   }
 }
 
@@ -193,6 +258,111 @@ export function getServiceSchema(service, baseUrl = 'https://legalcrest.com') {
       priceCurrency: 'USD',
       url,
       description: service.description,
+    },
+  }
+}
+
+/**
+ * Generate schema for an individual attorney
+ */
+export function getAttorneySchema(attorney) {
+  if (!attorney) {
+    return null
+  }
+
+  const [primaryCredential] = (attorney.credentials || '').split(',')
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: attorney.name,
+    jobTitle: attorney.title,
+    description: `${attorney.specialization} | ${attorney.credentials}`,
+    worksFor: {
+      '@type': 'Organization',
+      name: 'Legal Crest',
+      url: 'https://legalcrest.com',
+    },
+    image: attorney.image,
+    knowsAbout: attorney.specialization,
+  }
+
+  if (primaryCredential) {
+    schema.alumniOf = {
+      '@type': 'CollegeOrUniversity',
+      name: primaryCredential.trim(),
+    }
+  }
+
+  return schema
+}
+
+/**
+ * Generate ItemList schema for multiple attorneys
+ */
+export function getAttorneyListSchema(attorneys = []) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Legal Crest Senior Attorneys',
+    itemListElement: attorneys
+      .map((attorney, index) => {
+        const personSchema = getAttorneySchema(attorney)
+        if (!personSchema) return null
+        return {
+          '@type': 'ListItem',
+          position: index + 1,
+          item: personSchema,
+        }
+      })
+      .filter(Boolean),
+  }
+}
+
+/**
+ * Generate Review/Testimonials schema
+ */
+export function getReviewListSchema(testimonials = [], options = {}) {
+  const {
+    pageTitle = 'Client Testimonials',
+    reviewNamePrefix = 'Client Testimonial',
+    averageRating = '4.9',
+    itemReviewed = {
+      '@type': 'Organization',
+      name: 'Legal Crest',
+      url: 'https://legalcrest.com',
+    },
+  } = options
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: pageTitle,
+    itemListElement: testimonials.map((testimonial, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'Review',
+        name: `${reviewNamePrefix} #${index + 1}`,
+        reviewBody: testimonial.quote,
+        author: {
+          '@type': 'Person',
+          name: testimonial.client || testimonial.author || 'Verified Client',
+          jobTitle: testimonial.role || undefined,
+        },
+        reviewRating: {
+          '@type': 'Rating',
+          ratingValue: testimonial.rating || '5',
+          bestRating: '5',
+        },
+        itemReviewed,
+      },
+    })),
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: averageRating,
+      bestRating: '5',
+      reviewCount: String(Math.max(testimonials.length, 1)),
     },
   }
 }

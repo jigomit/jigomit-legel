@@ -1,7 +1,9 @@
 <script setup>
 import { onMounted, onBeforeUnmount, ref, nextTick } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { useHead } from '@unhead/vue'
 import brandMark from './assets/logo.svg'
+import { useStructuredData, getOrganizationSchema, getWebSiteSchema } from './composables/useSEO'
 
 const router = useRouter()
 const route = useRoute()
@@ -25,6 +27,17 @@ const contactChannels = [
 const currentYear = new Date().getFullYear()
 const theme = ref('dark')
 const showBackToTop = ref(false)
+
+useHead({
+  htmlAttrs: { lang: 'en' },
+  meta: [
+    { name: 'application-name', content: 'Legal Crest' },
+    { name: 'apple-mobile-web-app-title', content: 'Legal Crest' },
+    { name: 'theme-color', content: '#0f172a' },
+  ],
+})
+useHead(useStructuredData(getOrganizationSchema()))
+useHead(useStructuredData(getWebSiteSchema()))
 
 let observer
 let ticking = false // Throttle flag for scroll handler
@@ -75,10 +88,8 @@ const updateInstantRevealPreference = () => {
     prefersReducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
     prefersReducedMotionQuery.addEventListener('change', handleMotionPreferenceChange)
   }
-  const isMobile = typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches
   prefersInstantReveal =
     !isObserverSupported ||
-    isMobile ||
     (prefersReducedMotionQuery ? prefersReducedMotionQuery.matches : false)
 }
 
