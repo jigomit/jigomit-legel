@@ -4,6 +4,7 @@ import App from './App.vue'
 import routes, { scrollBehavior } from './router'
 import { services } from './data/services'
 import { insights } from './data/insights'
+import { createRoutePrefetcher } from './composables/useRoutePrefetch'
 
 // Generate all service detail routes for SSG
 const serviceRoutes = services.map(service => `/services/${service.slug}`)
@@ -26,6 +27,8 @@ export const createApp = ViteSSG(
     scrollBehavior,
   },
   ({ app, router, routes, isClient, initialState, head }) => {
+    const { prefetchRoute, prefetchRoutes } = createRoutePrefetcher(router)
+
     // ViteSSG provides head management automatically
     // No need to create head instance manually
 
@@ -36,9 +39,47 @@ export const createApp = ViteSSG(
       }
     })
 
+    if (!import.meta.env.SSR) {
+      router.beforeResolve((to, from, next) => {
+        if (to.fullPath !== from.fullPath) {
+          prefetchRoute(to)
+        }
+        next()
+      })
+    }
+
     // You can add global plugins here
     if (isClient) {
-      // Client-side only code
+      // Warm up the most common routes + heavy detail components once idle
+      router.isReady().then(() => {
+        const warmPaths = [
+          '/',
+          '/services',
+          '/process',
+          '/case-results',
+          '/insights',
+          '/contact',
+          '/book-consultation',
+        ]
+
+        const warmDetails = () => {
+          prefetchRoutes(warmPaths)
+          const firstService = services[0]
+          const firstArticle = insights[0]
+          if (firstService) {
+            prefetchRoute({ name: 'ServiceDetail', params: { slug: firstService.slug } })
+          }
+          if (firstArticle) {
+            prefetchRoute({ name: 'ArticleDetail', params: { slug: firstArticle.slug } })
+          }
+        }
+
+        if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+          window.requestIdleCallback(warmDetails)
+        } else {
+          setTimeout(warmDetails, 120)
+        }
+      })
     }
   }
 )

@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, onBeforeUnmount, ref, nextTick } from 'vue'
+import { onMounted, onBeforeUnmount, ref, nextTick, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useHead } from '@unhead/vue'
 import brandMark from './assets/logo.svg'
@@ -28,7 +28,34 @@ const contactChannels = [
 const currentYear = new Date().getFullYear()
 const theme = ref('dark')
 const showBackToTop = ref(false)
-const { prefetchRoute } = useRoutePrefetch()
+const isNavigating = ref(false)
+const { prefetchRoute, prefetchRoutes } = useRoutePrefetch()
+const preferredNavTargets = Array.from(new Set(['/', ...navLinks.map((link) => link.target), '/book-consultation']))
+
+const handlePrefetch = (target) => {
+  if (!target) return
+  prefetchRoute(target).catch(() => {})
+}
+
+const scheduleWarmPrefetch = () => {
+  if (typeof window === 'undefined') return
+  const run = () => {
+    prefetchRoutes(preferredNavTargets).catch(() => {})
+  }
+  if ('requestIdleCallback' in window) {
+    window.requestIdleCallback(run)
+  } else {
+    setTimeout(run, 80)
+  }
+}
+
+watch(
+  () => route.fullPath,
+  () => {
+    scheduleWarmPrefetch()
+  },
+  { immediate: true }
+)
 
 useHead({
   htmlAttrs: { lang: 'en' },
@@ -48,6 +75,7 @@ let cachedAnimatedBlocks = null // Cache DOM query results to avoid forced reflo
 let resizeObserverAttached = false
 let prefersReducedMotionQuery = null
 const isObserverSupported = typeof window !== 'undefined' && 'IntersectionObserver' in window
+let removeNavigationGuard
 
 const applyTheme = (value) => {
   if (typeof document !== 'undefined') {
@@ -184,6 +212,21 @@ onMounted(() => {
     resizeObserverAttached = true
   }
 
+  if (typeof window !== 'undefined' && !removeNavigationGuard) {
+    removeNavigationGuard = router.beforeResolve((to, from, next) => {
+      if (to.fullPath !== from.fullPath) {
+        isNavigating.value = true
+      }
+      next()
+    })
+
+    router.afterEach(() => {
+      window.requestAnimationFrame(() => {
+        isNavigating.value = false
+      })
+    })
+  }
+
   // Re-observe when route changes and reset scroll position
   router.afterEach(async (to) => {
     updateInstantRevealPreference()
@@ -209,6 +252,7 @@ onBeforeUnmount(() => {
     resizeObserverAttached = false
   }
   prefersReducedMotionQuery?.removeEventListener('change', handleMotionPreferenceChange)
+  removeNavigationGuard?.()
 })
 </script>
 
@@ -262,6 +306,19 @@ onBeforeUnmount(() => {
       </Transition>
     </main>
 
+    <Transition name="skeleton-fade">
+      <div
+        v-if="isNavigating"
+        class="page-skeleton"
+        aria-live="polite"
+        role="status"
+        aria-label="Loading next experience"
+      >
+        <span class="sr-only">Loading next page</span>
+        <div class="skeleton-line" v-for="line in 3" :key="line" />
+      </div>
+    </Transition>
+
     <footer class="footer" data-animate>
       <div class="footer-top">
         <div class="footer-brand">
@@ -298,10 +355,22 @@ onBeforeUnmount(() => {
       <div class="footer-bottom">
         <p>© {{ currentYear }} Legal Crest. All rights reserved.</p>
         <div class="footer-links">
-          <router-link to="/services">Services</router-link>
-          <router-link to="/process">Process</router-link>
-          <router-link to="/case-results">Case Results</router-link>
-          <router-link to="/contact">Contact</router-link>
+          <router-link to="/services" @mouseenter="handlePrefetch('/services')" @focus="handlePrefetch('/services')">
+            Services
+          </router-link>
+          <router-link to="/process" @mouseenter="handlePrefetch('/process')" @focus="handlePrefetch('/process')">
+            Process
+          </router-link>
+          <router-link
+            to="/case-results"
+            @mouseenter="handlePrefetch('/case-results')"
+            @focus="handlePrefetch('/case-results')"
+          >
+            Case Results
+          </router-link>
+          <router-link to="/contact" @mouseenter="handlePrefetch('/contact')" @focus="handlePrefetch('/contact')">
+            Contact
+          </router-link>
         </div>
       </div>
     </footer>
@@ -318,6 +387,3 @@ onBeforeUnmount(() => {
     </button>
   </div>
 </template>
-const handlePrefetch = (target) => {
-  prefetchRoute(target)
-}

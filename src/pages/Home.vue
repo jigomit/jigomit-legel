@@ -4,9 +4,11 @@ import { useHead } from '@unhead/vue'
 import OptimizedImage from '../components/OptimizedImage.vue'
 import { useRoutePrefetch } from '../composables/useRoutePrefetch'
 
-// Hero images - JPEG and WebP versions
-import heroIllustration from '../assets/images/hero/lawyer-professional-new.jpg'
-import heroIllustrationWebP from '../assets/images/hero/lawyer-professional-new.webp'
+// Hero images - responsive JPEG + WebP (max width 1600px) using the original artwork
+import heroIllustration from '../assets/images/hero/lawyer-professional-new.jpg?w=1200&as=src'
+import heroIllustrationWebP from '../assets/images/hero/lawyer-professional-new.jpg?w=1200&format=webp&as=src'
+import heroIllustrationSrcset from '../assets/images/hero/lawyer-professional-new.jpg?w=600;900;1200;1600&as=srcset'
+import heroIllustrationWebPSrcset from '../assets/images/hero/lawyer-professional-new.jpg?w=600;900;1200;1600&format=webp&as=srcset'
 
 // High court image - responsive sizes using vite-imagetools
 import highCourtImage from '../assets/high-court.jpg'
@@ -261,9 +263,11 @@ const { prefetchRoute } = useRoutePrefetch()
             <OptimizedImage
               :src="heroIllustration"
               :src-webp="heroIllustrationWebP"
+              :srcset="heroIllustrationSrcset"
+              :srcset-webp="heroIllustrationWebPSrcset"
               alt="Professional lawyer providing legal counsel at Legal Crest law firm office"
-              width="500"
-              height="333"
+              width="1200"
+              height="800"
               loading="eager"
               sizes="(min-width: 1024px) 45vw, 100vw"
               fetchpriority="high"

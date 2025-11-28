@@ -7,7 +7,7 @@ const compressionPlugin = () => ({
   name: 'emit-compressed-assets',
   generateBundle(_options, bundle) {
     Object.entries(bundle).forEach(([fileName, asset]) => {
-      if (!/\.(js|css)$/i.test(fileName)) return
+      if (!/\.(js|css|html)$/i.test(fileName)) return
 
       const source = asset.type === 'chunk' ? asset.code : asset.source
       const buffer = typeof source === 'string' ? Buffer.from(source) : Buffer.from(source)
@@ -66,6 +66,9 @@ export default defineConfig({
     formatting: 'minify',
   },
   build: {
+    modulePreload: {
+      polyfill: false,
+    },
     // Enable minification
     minify: 'terser',
     terserOptions: {

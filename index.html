@@ -9,6 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
     <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+    <link rel="modulepreload" href="/src/main.js" crossorigin />
+    <link rel="preload" as="style" href="/src/style.css" />
 
     <!-- Primary Meta Tags -->
     <title>Legal Crest - Legal Marketing Studio | Strategic Legal Marketing Solutions</title>
@@ -88,9 +90,17 @@
     <link
       rel="preload"
       as="image"
-      href="/src/assets/images/hero/lawyer-professional-new.webp"
+      href="/src/assets/images/hero/lawyer-professional-new.jpg"
       imagesrcset="/src/assets/images/hero/lawyer-professional-new.webp 1x, /src/assets/images/hero/lawyer-professional-new.jpg 2x"
-      imagesizes="100vw"
+      imagesizes="(min-width: 1024px) 45vw, 100vw"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="/src/assets/high-court.webp"
+      imagesrcset="/src/assets/high-court.webp 1x, /src/assets/high-court.jpg 2x"
+      imagesizes="(min-width: 1024px) 40vw, (min-width: 768px) 50vw, 100vw"
       fetchpriority="high"
     />
 

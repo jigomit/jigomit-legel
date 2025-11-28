@@ -1,12 +1,9 @@
-// Eager load only the Home page for instant display
-import Home from '../pages/Home.vue'
-
-// Lazy load all other routes for better performance
+// Lazy load every route component to keep the initial bundle lean.
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home,
+    component: () => import('../pages/Home.vue'),
     meta: { title: 'Legal Crest - Legal Marketing Studio' }
   },
   {
