@@ -179,7 +179,7 @@ const figureBadges = [
 </script>
 
 <template>
-  <div>
+  <div class="home-page">
     <header class="hero" id="hero" data-animate>
       <div class="hero-grid">
         <div class="hero-text">

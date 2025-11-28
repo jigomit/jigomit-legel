@@ -1,22 +1,23 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-Source lives in `src/`, where `main.js` mounts the Vue 3 app and attaches the router defined in `src/router`. Keep UI atoms and layouts inside `src/components`, page scenes in `src/pages`, and motion or scroll helpers in `src/composables`. Place icons, illustrations, and shared tokens inside `src/assets`, while all marketing copy and stats reside in `src/data`. Static files belong in `public/`, and `npm run build` writes the SSG output to `dist/`. Avoid editing `dist/` directly—treat it as a deployment artifact.
-
-## Architecture Overview
-This project is a Vite + Vue 3 single-page app exported through `vite-ssg`. Router routes map to files in `src/pages`, and shared layout chrome is handled by top-level components in `App.vue`. Smooth scrolling relies on Lenis, so any performance tweaks should pass through the composable that initializes it rather than scattered DOM calls.
+Core source lives in `src/`, with `main.js` mounting the Vue 3 SPA and router exports from `src/router`. Feature scenes reside under `src/pages`, shared UI atoms/chrome live in `src/components`, and scroll helpers belong in `src/composables`. Keep marketing copy or stats in `src/data`, visual assets under `src/assets`, and drop static files in `public/`. Tests mirror their targets and sit beside components as `ComponentName.spec.ts`.
 
 ## Build, Test, and Development Commands
-Run `npm install` once per clone. Use `npm run dev` for the local Vite server at `http://localhost:5173` and manually check every route and theme toggle. Execute `npm run build` to prerender routes and hydrate Lenis/router scripts, then `npm run preview` to serve the production bundle. When touching dependencies, run `npm outdated` to see available upgrades.
+- `npm install`: install dependencies after cloning.
+- `npm run dev`: launch Vite at `http://localhost:5173`; use it for day-to-day work and QA of all routes + theme toggles.
+- `npm run build`: run `vite-ssg` to prerender and ensure SSG output compiles without errors.
+- `npm run preview`: serve the production bundle locally; final QA should happen here.
+- `npm outdated`: audit dependency upgrade opportunities before bumping packages.
 
 ## Coding Style & Naming Conventions
-Stick to `<script setup>` with two-space indentation and single quotes for JavaScript strings. Keep CSS classes in kebab-case to align with `src/style.css`. Components/composables follow PascalCase (`CaseResultsGrid.vue`) and `use` prefixes (`useTheme.js`). Co-locate lightweight helper files near their consumers, and only introduce comments for non-obvious control flow. Use relative imports (`../assets/logo.svg`) to avoid Vite alias churn.
+Use Vue `<script setup>` single-file components, two-space indentation, and single-quoted strings. Classes follow the global styles in `src/style.css` and stay kebab-case. Components/composables use PascalCase with `use` prefixes where appropriate (`CaseResultsGrid.vue`, `useTheme.js`). Favor relative imports (`../assets/logo.svg`) to keep bundles lean, and keep helpers near their consumers.
 
 ## Testing Guidelines
-Automated tests are not yet wired; when introducing them, depend on `vitest` and place specs alongside the source as `ComponentName.spec.ts`. Until then, manual QA is required: run `npm run dev`, traverse every route, confirm dark/light styling, validate Lenis smooth scrolling, and watch the console for hydration warnings. Note these checks in PR descriptions so reviewers can reproduce.
+Manual QA is required for now: run `npm run dev`, browse every route, toggle dark/light themes, and verify Lenis scrolling without console warnings. Automated suites will rely on `vitest`; place specs beside sources (`ComponentName.spec.ts`) and keep coverage on critical flows before enabling CI gates.
 
 ## Commit & Pull Request Guidelines
-Commits follow Conventional Commits, e.g., `feat: add insights carousel` or `fix: debounce scroll observer`, limited to 72 characters with optional bodies for context. PRs must link to tracking issues, summarize functional or visual changes, attach before/after screenshots for UI tweaks, and list manual QA commands executed. Call out new env vars or analytics embeds explicitly so maintainers can verify configuration changes.
+Commits follow Conventional Commits (`feat: add insights carousel`, `fix: debounce scroll observer`) capped at 72 characters with optional bodies for context. Every PR must link its issue, summarize visual/functional changes, attach before/after screenshots for UI edits, enumerate manual QA commands, and document new env vars or analytics hooks so reviewers can replicate configuration.
 
 ## Security & Configuration Tips
-Never hard-code EmailJS keys or analytics tokens—use `import.meta.env` and document required variables in the PR. Review third-party embeds for GDPR/CCPA compliance and prefer first-party hosting for fonts and media. After dependency updates, rerun `npm outdated` and test `npm run preview` to ensure the SSG bundle stays healthy.
+Do not hard-code secrets such as EmailJS keys or analytics tokens; read them from `import.meta.env` and update documentation when a new variable is introduced. Host fonts/media first-party when possible and vet embeds for GDPR/CCPA compliance. After any dependency change, rerun `npm run preview` to confirm the prerendered output remains healthy.

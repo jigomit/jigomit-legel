@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, onBeforeUnmount, ref } from 'vue'
+import { onMounted, onBeforeUnmount, ref, nextTick } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import brandMark from './assets/logo.svg'
 
@@ -28,8 +28,11 @@ const showBackToTop = ref(false)
 
 let observer
 let ticking = false // Throttle flag for scroll handler
-let prefersInstantReveal = false // Cached matchMedia result to avoid forced reflows
+let prefersInstantReveal = false // Determines whether we skip animations
 let cachedAnimatedBlocks = null // Cache DOM query results to avoid forced reflows
+let resizeObserverAttached = false
+let prefersReducedMotionQuery = null
+const isObserverSupported = typeof window !== 'undefined' && 'IntersectionObserver' in window
 
 const applyTheme = (value) => {
   if (typeof document !== 'undefined') {
@@ -66,6 +69,61 @@ const scrollToTop = () => {
   })
 }
 
+const updateInstantRevealPreference = () => {
+  if (typeof window === 'undefined') return
+  if (!prefersReducedMotionQuery && typeof window.matchMedia === 'function') {
+    prefersReducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    prefersReducedMotionQuery.addEventListener('change', handleMotionPreferenceChange)
+  }
+  const isMobile = typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches
+  prefersInstantReveal =
+    !isObserverSupported ||
+    isMobile ||
+    (prefersReducedMotionQuery ? prefersReducedMotionQuery.matches : false)
+}
+
+const scheduleObserveElements = () => {
+  const run = () => {
+    cachedAnimatedBlocks = null
+    observeElements()
+  }
+  if (typeof requestIdleCallback === 'function') {
+    requestIdleCallback(run)
+  } else {
+    requestAnimationFrame(run)
+  }
+}
+
+const handleMotionPreferenceChange = () => {
+  updateInstantRevealPreference()
+  scheduleObserveElements()
+}
+
+const observeElements = () => {
+  if (typeof document === 'undefined') return
+  if (!cachedAnimatedBlocks) {
+    cachedAnimatedBlocks = document.querySelectorAll('[data-animate]')
+  }
+
+  cachedAnimatedBlocks.forEach((block) => {
+    if (prefersInstantReveal || !isObserverSupported) {
+      block.classList.add('is-visible')
+      if (isObserverSupported) {
+        observer?.unobserve(block)
+      }
+    } else {
+      observer?.observe(block)
+    }
+  })
+}
+
+const handleResize = () => {
+  updateInstantRevealPreference()
+  if (prefersInstantReveal) {
+    scheduleObserveElements()
+  }
+}
+
 onMounted(() => {
   try {
     const storedTheme = localStorage.getItem('lc-theme')
@@ -83,50 +141,39 @@ onMounted(() => {
 
   applyTheme(theme.value)
 
-  // Cache matchMedia result once to avoid forced reflows on every route change
-  prefersInstantReveal = window.matchMedia('(max-width: 768px)').matches
+  updateInstantRevealPreference()
 
   // Back to top button scroll listener
   window.addEventListener('scroll', handleScroll, { passive: true })
 
-  observer = new IntersectionObserver(
-    (entries) => {
-      // Batch all classList operations in a single RAF to avoid forced reflows
-      requestAnimationFrame(() => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible')
-            observer.unobserve(entry.target)
-          }
+  if (isObserverSupported) {
+    observer = new IntersectionObserver(
+      (entries) => {
+        // Batch all classList operations in a single RAF to avoid forced reflows
+        requestAnimationFrame(() => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible')
+              observer?.unobserve(entry.target)
+            }
+          })
         })
-      })
-    },
-    { threshold: 0.2 }
-  )
-
-  // Re-observe elements whenever the route changes
-  const observeElements = () => {
-    // Cache DOM query to avoid repeated querySelectorAll causing forced reflows
-    if (!cachedAnimatedBlocks) {
-      cachedAnimatedBlocks = document.querySelectorAll('[data-animate]')
-    }
-
-    // Use cached matchMedia result to avoid forced reflows
-    cachedAnimatedBlocks.forEach((block) => {
-      // Note: Animation delays now handled by CSS nth-child to avoid forced reflows
-      if (prefersInstantReveal) {
-        block.classList.add('is-visible')
-        observer.unobserve(block)
-      } else {
-        observer.observe(block)
-      }
-    })
+      },
+      { threshold: 0.05, rootMargin: '0px 0px 0px 0px' }
+    )
   }
 
-  observeElements()
+  nextTick(() => {
+    observeElements()
+  })
+  if (!resizeObserverAttached) {
+    window.addEventListener('resize', handleResize, { passive: true })
+    resizeObserverAttached = true
+  }
 
   // Re-observe when route changes and reset scroll position
-  router.afterEach((to) => {
+  router.afterEach(async (to) => {
+    updateInstantRevealPreference()
     if (to.hash) {
       const target = document.querySelector(to.hash)
       if (target) {
@@ -136,25 +183,19 @@ onMounted(() => {
     } else {
       window.scrollTo({ top: 0, behavior: 'auto' })
     }
-    // Clear cache so new page elements are queried
-    cachedAnimatedBlocks = null
-    // Use requestIdleCallback for non-critical work to avoid blocking main thread
-    // Falls back to requestAnimationFrame if not supported
-    if (typeof requestIdleCallback === 'function') {
-      requestIdleCallback(() => {
-        observeElements()
-      })
-    } else {
-      requestAnimationFrame(() => {
-        observeElements()
-      })
-    }
+    await nextTick()
+    scheduleObserveElements()
   })
 })
 
 onBeforeUnmount(() => {
   observer?.disconnect()
   window.removeEventListener('scroll', handleScroll)
+  if (resizeObserverAttached) {
+    window.removeEventListener('resize', handleResize)
+    resizeObserverAttached = false
+  }
+  prefersReducedMotionQuery?.removeEventListener('change', handleMotionPreferenceChange)
 })
 </script>
 

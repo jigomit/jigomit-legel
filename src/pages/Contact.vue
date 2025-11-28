@@ -213,9 +213,6 @@ const handleInput = (fieldName) => {
             {{ errorMessage }}
           </div>
 
-          <p v-if="contactStatus === 'success'" class="form-success">
-            Thanks for reaching out. Our concierge will reply within two business hours.
-          </p>
         </form>
         <div class="contact-details">
           <div class="contact-visual">

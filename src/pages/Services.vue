@@ -2,6 +2,7 @@
 import { services } from '../data/services'
 import { useSEO, useStructuredData, getServiceSchema, getBreadcrumbSchema } from '../composables/useSEO'
 import { useHead } from '@unhead/vue'
+import { useRouter } from 'vue-router'
 
 // SEO Configuration
 useSEO({
@@ -26,6 +27,11 @@ useHead(
 services.forEach((service) => {
   useHead(useStructuredData(getServiceSchema(service)))
 })
+
+const router = useRouter()
+const navigateToService = (slug) => {
+  router.push(`/services/${slug}`)
+}
 </script>
 
 <template>
@@ -43,6 +49,12 @@ services.forEach((service) => {
         v-for="service in services"
         :key="service.slug"
         class="service-card"
+        role="link"
+        tabindex="0"
+        :aria-label="`View more about ${service.title}`"
+        @click="navigateToService(service.slug)"
+        @keydown.enter.prevent="navigateToService(service.slug)"
+        @keydown.space.prevent="navigateToService(service.slug)"
       >
         <div class="service-photo">
           <picture>
@@ -59,12 +71,12 @@ services.forEach((service) => {
           </ul>
         </div>
         <div class="service-card-actions">
-          <router-link :to="`/services/${service.slug}`" class="btn ghost">
-            Learn more →
-          </router-link>
           <router-link
             :to="{ path: '/book-consultation', query: { service: service.focus } }"
             class="btn primary"
+            @click.stop
+            @keydown.enter.stop
+            @keydown.space.stop.prevent
           >
             Book this service
           </router-link>
