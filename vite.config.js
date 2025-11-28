@@ -38,11 +38,22 @@ const asyncCSSPlugin = () => ({
     order: 'post',
     handler(html) {
       // Transform CSS link tags to load asynchronously with noscript fallback
+      let primaryStylesCaptured = false
       return html.replace(
         /<link([^>]*?)rel="stylesheet"([^>]*?)>/g,
         (match, before, after) => {
           // Skip if already has media attribute or if it's inline critical CSS
           if (match.includes('media=') || match.includes('data-critical')) {
+            return match
+          }
+
+          const isAppAsset = /href="[^"]*\/assets\//.test(match)
+          if (isAppAsset && !primaryStylesCaptured) {
+            primaryStylesCaptured = true
+            return `<link${before}rel="stylesheet"${after} data-critical>`
+          }
+
+          if (!isAppAsset) {
             return match
           }
           // Add media="print" onload trick for non-blocking CSS + noscript fallback
