@@ -7,8 +7,18 @@ import { useRoutePrefetch } from '../composables/useRoutePrefetch'
 // Hero images - JPEG and WebP versions
 import heroIllustration from '../assets/images/hero/lawyer-professional-new.jpg'
 import heroIllustrationWebP from '../assets/images/hero/lawyer-professional-new.webp'
+
+// High court image - responsive sizes using vite-imagetools
 import highCourtImage from '../assets/high-court.jpg'
 import highCourtImageWebP from '../assets/high-court.webp'
+// Generate responsive WebP sizes: 400w, 600w, 800w
+import highCourtImageWebP400 from '../assets/high-court.webp?w=400'
+import highCourtImageWebP600 from '../assets/high-court.webp?w=600'
+import highCourtImageWebP800 from '../assets/high-court.webp?w=800'
+// Generate responsive JPEG sizes: 400w, 600w, 800w (fallback)
+import highCourtImageJPG400 from '../assets/high-court.jpg?w=400'
+import highCourtImageJPG600 from '../assets/high-court.jpg?w=600'
+import highCourtImageJPG800 from '../assets/high-court.jpg?w=800'
 
 // SEO Configuration
 useSEO({
@@ -278,11 +288,13 @@ const { prefetchRoute } = useRoutePrefetch()
               <OptimizedImage
                 :src="highCourtImage"
                 :src-webp="highCourtImageWebP"
+                :srcset="`${highCourtImageJPG400} 400w, ${highCourtImageJPG600} 600w, ${highCourtImageJPG800} 800w`"
+                :srcset-webp="`${highCourtImageWebP400} 400w, ${highCourtImageWebP600} 600w, ${highCourtImageWebP800} 800w`"
                 alt="United States Supreme Court building representing legal authority and judicial expertise"
                 width="800"
                 height="593"
                 class="high-court-image"
-                sizes="(min-width: 1024px) 40vw, 100vw"
+                sizes="(min-width: 1024px) 40vw, (min-width: 768px) 50vw, 100vw"
               />
             </div>
             <p class="high-court-caption">Recognized expertise in judicial proceedings and legal advocacy</p>

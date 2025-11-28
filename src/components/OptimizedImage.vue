@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 
 const props = defineProps({
   src: { type: String, required: true },
@@ -26,23 +26,15 @@ const props = defineProps({
     type: String,
     default: 'auto',
   },
-  skeleton: {
-    type: Boolean,
-    default: true,
-  },
 })
 
 const defaultWebp = computed(() => props.srcWebp || props.src.replace(/\.jpg$/, '.webp'))
 const resolvedWebpSrcset = computed(() => props.srcsetWebp || props.srcset)
 const resolvedSrcset = computed(() => props.srcset || props.src)
-const isLoaded = ref(false)
-const handleLoad = () => {
-  isLoaded.value = true
-}
 </script>
 
 <template>
-  <picture :class="[{ 'optimized-image': skeleton, 'is-loaded': skeleton && isLoaded }]">
+  <picture class="optimized-image">
     <source :srcset="resolvedWebpSrcset || defaultWebp" :sizes="sizes" type="image/webp" />
     <img
       :src="src"
@@ -55,7 +47,6 @@ const handleLoad = () => {
       :sizes="sizes"
       :decoding="decoding"
       :fetchpriority="fetchpriority"
-      @load="handleLoad"
     />
   </picture>
 </template>

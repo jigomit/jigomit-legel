@@ -89,47 +89,17 @@
   }
 }
 
-/* Optimized image skeleton */
+/* Optimized image - no skeleton animation */
 .optimized-image {
   position: relative;
   display: block;
   overflow: hidden;
 }
 
-.optimized-image::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(120deg, rgba(15, 23, 42, 0.45), rgba(30, 41, 59, 0.2), rgba(15, 23, 42, 0.45));
-  animation: skeletonPulse 1.4s ease-in-out infinite;
-  z-index: 1;
-  pointer-events: none;
-  transition: opacity 0.4s ease;
-}
-
-.optimized-image.is-loaded::before {
-  opacity: 0;
-}
-
 .optimized-image img {
   display: block;
   max-width: 100%;
   height: auto;
-}
-
-@keyframes skeletonPulse {
-  0% {
-    opacity: 0.35;
-    transform: translateX(-20%);
-  }
-  50% {
-    opacity: 0.8;
-    transform: translateX(20%);
-  }
-  100% {
-    opacity: 0.35;
-    transform: translateX(-20%);
-  }
 }
 
 [data-theme='light'] {

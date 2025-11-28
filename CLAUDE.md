@@ -38,7 +38,8 @@ src/
 ├── composables/
 │   ├── useSEO.js                # SEO meta tags, Open Graph, structured data schemas
 │   ├── useEmailJS.js            # EmailJS form submission integration
-│   └── useFormValidation.js    # Client-side form validation rules
+│   ├── useFormValidation.js    # Client-side form validation rules
+│   └── useRoutePrefetch.js     # Route prefetching for faster navigation
 ├── components/
 │   ├── OptimizedImage.vue       # <picture> component with WebP/JPEG fallback
 │   └── CustomSelect.vue         # Custom styled select dropdown
@@ -97,7 +98,7 @@ Images use a dual-format strategy for optimal performance:
 ### Animation System
 Intersection Observer API triggers fade-in animations across all pages (implemented in App.vue):
 - Elements with `data-animate` attribute are observed
-- When visible (15% threshold with -10% bottom margin), `is-visible` class is added
+- When visible (5% threshold), `is-visible` class is added
 - Staggered delays handled by CSS `:nth-child()` selectors to avoid forced reflows
 - Observer re-initializes on route changes via `router.afterEach()` hook with `nextTick()` for proper DOM updates
 
@@ -109,7 +110,7 @@ Intersection Observer API triggers fade-in animations across all pages (implemen
 
 **Performance Optimizations**:
 - DOM queries cached to avoid repeated `querySelectorAll()` calls
-- IntersectionObserver threshold: `0.15` with rootMargin: `'0px 0px -10% 0px'`
+- IntersectionObserver threshold: `0.05` with rootMargin: `'0px 0px 0px 0px'`
 - Uses `requestIdleCallback` (with `requestAnimationFrame` fallback) for non-critical observer re-initialization
 - All classList operations batched in `requestAnimationFrame`
 - Resize event listener with passive flag for better scroll performance
@@ -127,6 +128,7 @@ All styles are in `src/style.css`. Key design tokens:
 ### Router Configuration
 Router uses `createWebHistory()` for clean URLs (no hash). Key features:
 - **Lazy loading**: Only Home.vue is eager-loaded; all other routes are lazy-loaded via `() => import()` for better performance
+- **Route prefetching**: Navigation links in `App.vue` use `useRoutePrefetch()` composable to prefetch routes on hover/focus for instant navigation
 - **Scroll behavior** (defined in `router/index.js`):
   - Scrolls to top on navigation
   - Supports hash anchors for in-page navigation with smooth scrolling
@@ -175,10 +177,11 @@ Forms use EmailJS for email delivery (`src/composables/useEmailJS.js`):
 `vite.config.js` includes performance optimizations:
 - **Minification**: Terser with console.log removal in production
 - **CSS code splitting**: Enabled for better caching
-- **Manual chunks**: EmailJS and Unhead split into separate chunks for optimal caching
+- **Manual chunks**: Vue, Vue Router, EmailJS, and Unhead split into separate chunks for optimal caching
 - **Image optimization**: `vite-imagetools` plugin for WebP generation
 - **Asset inlining**: Files <4KB inlined as base64
 - **Dependency pre-bundling**: Vue, Vue Router, EmailJS, Unhead optimized
+- **Compression**: Custom plugin generates Gzip (.gz) and Brotli (.br) compressed versions of JS/CSS assets at build time for static hosting
 
 ### Build Output
 Running `npm run build` generates static files in `dist/` that can be deployed to any static hosting service (Vercel, Netlify, AWS S3, etc.). All pages are pre-rendered as HTML for instant loading and SEO.

@@ -31,11 +31,34 @@ const compressionPlugin = () => ({
   },
 })
 
+// Plugin to make CSS non-render-blocking
+const asyncCSSPlugin = () => ({
+  name: 'async-css-plugin',
+  transformIndexHtml: {
+    order: 'post',
+    handler(html) {
+      // Transform CSS link tags to load asynchronously with noscript fallback
+      return html.replace(
+        /<link([^>]*?)rel="stylesheet"([^>]*?)>/g,
+        (match, before, after) => {
+          // Skip if already has media attribute or if it's inline critical CSS
+          if (match.includes('media=') || match.includes('data-critical')) {
+            return match
+          }
+          // Add media="print" onload trick for non-blocking CSS + noscript fallback
+          return `<link${before}rel="stylesheet"${after} media="print" onload="this.media='all'"><noscript><link${before}rel="stylesheet"${after}></noscript>`
+        }
+      )
+    },
+  },
+})
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
     imagetools(), // Enable imagetools for manual WebP generation via import queries
+    asyncCSSPlugin(), // Make CSS non-render-blocking for better mobile performance
     compressionPlugin(),
   ],
   ssgOptions: {
